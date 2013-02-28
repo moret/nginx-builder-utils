@@ -8,6 +8,7 @@ SOURCES=$BASE/sources
 BUILD=$BASE/build
 CONF=$BUILD/conf
 DAEMON=$BUILD/sbin/nginx
+MODULES=()
 
 if [ -f $DAEMON ]; then
   echo 'will try to stop nginx, this will require sudo access'
@@ -32,12 +33,15 @@ fi
 if [ ! -d $HTTPREDIS2_SOURCE ]; then
   mkdir $HTTPREDIS2_SOURCE
   tar xvzf $HTTPREDIS2_TAR -C $HTTPREDIS2_SOURCE
-  HTTPREDIS2_PATH=$HTTPREDIS2_SOURCE/`ls $HTTPREDIS2_SOURCE`
 fi
+
+HTTPREDIS2_PATH=$HTTPREDIS2_SOURCE/`ls $HTTPREDIS2_SOURCE`
+MODULES+=($HTTPREDIS2_PATH)
 
 # hello-world
 
 HELLOWORLD_PATH=$BASE/../nginx-hello-world-module
+MODULES+=($HELLOWORLD_PATH)
 
 # downloads
 
@@ -56,13 +60,17 @@ if [ ! -d $NGINX_PATH ]; then
   tar xvzf $NGINX_TAR -C $SOURCES
 fi
 
-cd $NGINX_PATH && ./configure \
-  --with-ld-opt='-L/usr/local/lib' \
-  --with-cc-opt='-I/usr/local/include' \
-  --add-module=$HTTPREDIS2_PATH \
-  --add-module=$HELLOWORLD_PATH \
-  --prefix=$BUILD
+CONFIGURE=./configure
+CONFIGURE="$CONFIGURE --with-ld-opt='-L/usr/local/lib'"
+CONFIGURE="$CONFIGURE --with-cc-opt='-I/usr/local/include'"
+for module in ${MODULES[@]}; do
+  CONFIGURE="$CONFIGURE --add-module=$module"
+done
+CONFIGURE="$CONFIGURE --prefix=$BUILD"
 
+echo $CONFIGURE
+
+cd $NGINX_PATH && $CONFIGURE
 cd $NGINX_PATH && make -j2
 cd $NGINX_PATH && make install
 
