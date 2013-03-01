@@ -43,6 +43,11 @@ MODULES+=($HTTPREDIS2_PATH)
 HELLOWORLD_PATH=$BASE/../nginx-hello-world-module
 MODULES+=($HELLOWORLD_PATH)
 
+# basic_c_lib_based_module
+
+BASIC_C_LIB_BASED_MODULE_PATH=$BASE/../ngx_basic_c_lib_based_module
+MODULES+=($BASIC_C_LIB_BASED_MODULE_PATH)
+
 # downloads
 
 NGINX_VERSION=nginx-1.3.6
