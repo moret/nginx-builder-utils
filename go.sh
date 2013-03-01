@@ -45,8 +45,10 @@ MODULES+=($HELLOWORLD_PATH)
 
 # basic_c_lib_based_module
 
+BASIC_C_LIB_PATH=$BASE/../basic_c_lib
 BASIC_C_LIB_BASED_MODULE_PATH=$BASE/../ngx_basic_c_lib_based_module
 MODULES+=($BASIC_C_LIB_BASED_MODULE_PATH)
+export LIBRARY_PATH="$BASIC_C_LIB_PATH/bin"
 
 # downloads
 
